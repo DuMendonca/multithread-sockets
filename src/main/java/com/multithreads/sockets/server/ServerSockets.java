@@ -18,6 +18,8 @@ public class ServerSockets {
         ServerSocket serverSocket = new ServerSocket(12345);
         System.out.println("Connected at server");
         File file = new File("fileName.txt");
+        file.createNewFile();
+
 
         while (true) {
             clientSocket = serverSocket.accept();
