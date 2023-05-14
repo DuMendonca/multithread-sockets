@@ -17,14 +17,8 @@ public class ClientSockets extends Thread {
 
         Thread write = new Thread(new WriteDataSocket(socket));
         Thread print = new Thread(new PrintDataSocket(socket));
+
         write.start();
         print.start();
-
-        try {
-            write.join();
-            print.join();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

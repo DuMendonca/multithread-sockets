@@ -2,13 +2,13 @@ package com.multithreads.sockets.server;
 
 import com.multithreads.sockets.connection.PrintDataSocket;
 import com.multithreads.sockets.connection.WriteDataSocket;
-import com.multithreads.sockets.utils.FileWrite;
+import com.multithreads.sockets.utils.Utils;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ServerSockets {
+public class ServerSockets extends Thread{
     private static Socket clientSocket;
 
     public ServerSockets() {
@@ -20,24 +20,19 @@ public class ServerSockets {
         File file = new File("fileName.txt");
         file.createNewFile();
 
-
         while (true) {
             clientSocket = serverSocket.accept();
             System.out.println("Client " + clientSocket.getInetAddress().getHostAddress() + " connected");
 
-            FileWrite.writeConnectionFromServer(file.getName(), clientSocket);
+            Utils.writeConnectionFromServer(file.getName(), clientSocket);
+
+            new ServerSockets().start();
 
             Thread write = new Thread(new WriteDataSocket(clientSocket));
             Thread print = new Thread(new PrintDataSocket(clientSocket));
+
             write.start();
             print.start();
-
-            try {
-                write.join();
-                print.join();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
         }
     }
 }
